@@ -1,0 +1,228 @@
+#:kivy 2.0.0
+
+<EditItemScreen>:
+    canvas.before:
+        Color:
+            rgba: app.page_bg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+
+        TopBar:
+            id: header_bar
+            title: "Edit item"
+            subtitle: "Update product details and adjust stock."
+            NeutralButton:
+                text: "Cancel"
+                size_hint_x: None
+                width: 110
+                on_release: root.manager.current = "inventory"
+            DangerButton:
+                text: "Delete"
+                size_hint_x: None
+                width: 130
+                on_release: root.confirm_delete()
+            SuccessButton:
+                text: "Save changes"
+                size_hint_x: None
+                width: 160
+                on_release: root.save_changes()
+
+        ScrollView:
+            do_scroll_x: False
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                padding: 28, 20
+                spacing: 16
+
+                Card:
+                    size_hint_y: None
+                    height: 280
+                    spacing: 14
+                    BoxLayout:
+                        spacing: 20
+                        BoxLayout:
+                            orientation: "vertical"
+                            size_hint_x: None
+                            width: 200
+                            spacing: 8
+                            Image:
+                                id: item_image
+                                source: ""
+                                size_hint_y: None
+                                height: 180
+                                allow_stretch: True
+                                keep_ratio: True
+                                canvas.before:
+                                    Color:
+                                        rgba: app.input_bg
+                                    RoundedRectangle:
+                                        pos: self.pos
+                                        size: self.size
+                                        radius: [12,]
+                            Label:
+                                id: title_label
+                                text: "Edit Item"
+                                color: app.text_color
+                                bold: True
+                                font_size: 15
+                                halign: "center"
+                                valign: "middle"
+                                text_size: self.size
+                                size_hint_y: None
+                                height: 26
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            spacing: 10
+                            BoxLayout:
+                                spacing: 12
+                                BoxLayout:
+                                    orientation: "vertical"
+                                    spacing: 4
+                                    Label:
+                                        text: "Item name"
+                                        color: app.muted_text_color
+                                        font_size: 12
+                                        bold: True
+                                        size_hint_y: None
+                                        height: 16
+                                        halign: "left"
+                                        valign: "middle"
+                                        text_size: self.size
+                                    StyledInput:
+                                        id: name_input
+                                BoxLayout:
+                                    orientation: "vertical"
+                                    spacing: 4
+                                    Label:
+                                        text: "SKU"
+                                        color: app.muted_text_color
+                                        font_size: 12
+                                        bold: True
+                                        size_hint_y: None
+                                        height: 16
+                                        halign: "left"
+                                        valign: "middle"
+                                        text_size: self.size
+                                    StyledInput:
+                                        id: sku_input
+                            BoxLayout:
+                                spacing: 12
+                                BoxLayout:
+                                    orientation: "vertical"
+                                    spacing: 4
+                                    Label:
+                                        text: "Price ($)"
+                                        color: app.muted_text_color
+                                        font_size: 12
+                                        bold: True
+                                        size_hint_y: None
+                                        height: 16
+                                        halign: "left"
+                                        valign: "middle"
+                                        text_size: self.size
+                                    StyledInput:
+                                        id: price_input
+                                        input_filter: "float"
+                                BoxLayout:
+                                    orientation: "vertical"
+                                    spacing: 4
+                                    Label:
+                                        text: "Quantity"
+                                        color: app.muted_text_color
+                                        font_size: 12
+                                        bold: True
+                                        size_hint_y: None
+                                        height: 16
+                                        halign: "left"
+                                        valign: "middle"
+                                        text_size: self.size
+                                    StyledInput:
+                                        id: qty_input
+                                        input_filter: "int"
+                            BoxLayout:
+                                orientation: "vertical"
+                                spacing: 4
+                                Label:
+                                    text: "Category"
+                                    color: app.muted_text_color
+                                    font_size: 12
+                                    bold: True
+                                    size_hint_y: None
+                                    height: 16
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+                                StyledInput:
+                                    id: category_input
+
+                Card:
+                    size_hint_y: None
+                    height: 160
+                    spacing: 10
+                    Label:
+                        text: "Stock adjustment"
+                        color: app.text_color
+                        bold: True
+                        font_size: 16
+                        size_hint_y: None
+                        height: 24
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                    Label:
+                        text: "Record sales, restocks or damaged units."
+                        color: app.muted_text_color
+                        font_size: 12
+                        size_hint_y: None
+                        height: 18
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                    BoxLayout:
+                        size_hint_y: None
+                        height: 46
+                        spacing: 8
+                        NeutralButton:
+                            text: "−"
+                            size_hint_x: None
+                            width: 46
+                            font_size: 22
+                            on_release: root.bump(-1)
+                        StyledInput:
+                            id: adjust_qty
+                            text: "0"
+                            input_filter: "int"
+                            size_hint_x: None
+                            width: 110
+                        NeutralButton:
+                            text: "+"
+                            size_hint_x: None
+                            width: 46
+                            font_size: 22
+                            on_release: root.bump(1)
+                        StyledInput:
+                            id: reason_input
+                            hint_text: "Reason (Sale / Restock / Damaged)"
+                        PrimaryButton:
+                            text: "Record transaction"
+                            size_hint_x: None
+                            width: 200
+                            on_release: root.record_transaction()
+
+                Label:
+                    id: error_label
+                    text: ""
+                    color: app.danger
+                    font_size: 13
+                    size_hint_y: None
+                    height: 22
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size

@@ -1,0 +1,156 @@
+#:kivy 2.0.0
+
+<SuppliersScreen>:
+    canvas.before:
+        Color:
+            rgba: app.page_bg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "horizontal"
+
+        Sidebar:
+            BoxLayout:
+                size_hint_y: None
+                height: 64
+                padding: 22, 0
+                spacing: 10
+                Widget:
+                    size_hint_x: None
+                    width: 36
+                    canvas:
+                        Color:
+                            rgba: app.primary
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [9,]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        Line:
+                            points: self.x + 9, self.y + 9, self.x + 9, self.y + 27, self.x + 27, self.y + 27
+                            width: 1.8
+                        Line:
+                            points: self.x + 13, self.y + 22, self.x + 18, self.y + 17, self.x + 23, self.y + 22
+                            width: 1.8
+                Label:
+                    text: "LogicTrack"
+                    color: 1, 1, 1, 1
+                    font_size: 19
+                    bold: True
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+
+            Widget:
+                size_hint_y: None
+                height: 12
+            Label:
+                text: "MENU"
+                color: 0.55, 0.62, 0.74, 1
+                font_size: 11
+                bold: True
+                size_hint_y: None
+                height: 22
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                padding: 22, 0
+
+            NavButton:
+                label_text: "Dashboard"
+                icon_glyph: ""
+                icon_fallback: "D"
+                on_release: root.manager.current = "dashboard"
+            NavButton:
+                label_text: "Inventory"
+                icon_glyph: ""
+                icon_fallback: "I"
+                on_release: root.manager.current = "inventory"
+            NavButton:
+                label_text: "Suppliers"
+                icon_glyph: ""
+                icon_fallback: "S"
+                active: True
+            NavButton:
+                label_text: "Reports"
+                icon_glyph: ""
+                icon_fallback: "R"
+                on_release: root.manager.current = "reports"
+            NavButton:
+                label_text: "Settings"
+                icon_glyph: ""
+                icon_fallback: "C"
+                on_release: root.manager.current = "settings"
+
+            Widget:
+
+            BoxLayout:
+                size_hint_y: None
+                height: 56
+                padding: 14, 4
+                Button:
+                    text: "[font=" + app.icon_font + "][size=18][/size][/font]    Log out" if app.icon_font != "Roboto" else "L  Log out"
+                    markup: app.icon_font != "Roboto"
+                    background_normal: ""
+                    background_color: 0, 0, 0, 0
+                    color: 0.95, 0.55, 0.55, 1
+                    font_size: 14
+                    bold: True
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                    padding: [22, 0]
+                    on_release:
+                        app.current_user = None
+                        root.manager.current = "login"
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 0.05
+                        RoundedRectangle:
+                            pos: (self.x + 12, self.y + 3)
+                            size: (self.width - 24, self.height - 6)
+                            radius: [8,]
+
+        BoxLayout:
+            orientation: "vertical"
+
+            TopBar:
+                title: "Suppliers"
+                subtitle: "Manage vendors that keep your shelves full."
+                PrimaryButton:
+                    text: "+ Add supplier"
+                    size_hint_x: None
+                    width: 170
+                    on_release: root.open_form()
+
+            BoxLayout:
+                orientation: "vertical"
+                padding: 28, 20
+                spacing: 16
+
+                Card:
+                    size_hint_y: None
+                    height: 90
+                    padding: 16
+                    BoxLayout:
+                        spacing: 12
+                        StyledInput:
+                            id: search_input
+                            hint_text: "Search by name or ID..."
+                            size_hint_x: 0.85
+                            on_text_validate: root.refresh()
+                        PrimaryButton:
+                            text: "Search"
+                            size_hint_x: 0.15
+                            on_release: root.refresh()
+
+                Card:
+                    padding: 0
+                    spacing: 0
+                    BoxLayout:
+                        id: suppliers_table
+                        orientation: "vertical"
+                        spacing: 0

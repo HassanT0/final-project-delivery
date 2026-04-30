@@ -1,0 +1,221 @@
+#:kivy 2.0.0
+
+<ReportsScreen>:
+    canvas.before:
+        Color:
+            rgba: app.page_bg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "horizontal"
+
+        Sidebar:
+            BoxLayout:
+                size_hint_y: None
+                height: 64
+                padding: 22, 0
+                spacing: 10
+                Widget:
+                    size_hint_x: None
+                    width: 36
+                    canvas:
+                        Color:
+                            rgba: app.primary
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [9,]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        Line:
+                            points: self.x + 9, self.y + 9, self.x + 9, self.y + 27, self.x + 27, self.y + 27
+                            width: 1.8
+                        Line:
+                            points: self.x + 13, self.y + 22, self.x + 18, self.y + 17, self.x + 23, self.y + 22
+                            width: 1.8
+                Label:
+                    text: "LogicTrack"
+                    color: 1, 1, 1, 1
+                    font_size: 19
+                    bold: True
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+
+            Widget:
+                size_hint_y: None
+                height: 12
+            Label:
+                text: "MENU"
+                color: 0.55, 0.62, 0.74, 1
+                font_size: 11
+                bold: True
+                size_hint_y: None
+                height: 22
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                padding: 22, 0
+
+            NavButton:
+                label_text: "Dashboard"
+                icon_glyph: ""
+                icon_fallback: "D"
+                on_release: root.manager.current = "dashboard"
+            NavButton:
+                label_text: "Inventory"
+                icon_glyph: ""
+                icon_fallback: "I"
+                on_release: root.manager.current = "inventory"
+            NavButton:
+                label_text: "Suppliers"
+                icon_glyph: ""
+                icon_fallback: "S"
+                on_release: root.manager.current = "suppliers"
+            NavButton:
+                label_text: "Reports"
+                icon_glyph: ""
+                icon_fallback: "R"
+                active: True
+            NavButton:
+                label_text: "Settings"
+                icon_glyph: ""
+                icon_fallback: "C"
+                on_release: root.manager.current = "settings"
+
+            Widget:
+
+            BoxLayout:
+                size_hint_y: None
+                height: 56
+                padding: 14, 4
+                Button:
+                    text: "[font=" + app.icon_font + "][size=18][/size][/font]    Log out" if app.icon_font != "Roboto" else "L  Log out"
+                    markup: app.icon_font != "Roboto"
+                    background_normal: ""
+                    background_color: 0, 0, 0, 0
+                    color: 0.95, 0.55, 0.55, 1
+                    font_size: 14
+                    bold: True
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                    padding: [22, 0]
+                    on_release:
+                        app.current_user = None
+                        root.manager.current = "login"
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 0.05
+                        RoundedRectangle:
+                            pos: (self.x + 12, self.y + 3)
+                            size: (self.width - 24, self.height - 6)
+                            radius: [8,]
+
+        BoxLayout:
+            orientation: "vertical"
+
+            TopBar:
+                title: "Reports"
+                subtitle: "Generate and export inventory and sales insights."
+
+            BoxLayout:
+                orientation: "vertical"
+                padding: 28, 20
+                spacing: 16
+
+                Card:
+                    size_hint_y: None
+                    height: 220
+                    spacing: 12
+                    Label:
+                        text: "Configure report"
+                        color: app.text_color
+                        font_size: 16
+                        bold: True
+                        size_hint_y: None
+                        height: 22
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: 70
+                        spacing: 12
+                        BoxLayout:
+                            orientation: "vertical"
+                            spacing: 4
+                            Label:
+                                text: "Report type"
+                                color: app.muted_text_color
+                                font_size: 12
+                                bold: True
+                                size_hint_y: None
+                                height: 16
+                                halign: "left"
+                                valign: "middle"
+                                text_size: self.size
+                            StyledInput:
+                                id: report_type_input
+                                hint_text: "Low Stock / Highest Selling / Lowest Selling / Expiration"
+                        BoxLayout:
+                            orientation: "vertical"
+                            spacing: 4
+                            size_hint_x: 0.4
+                            Label:
+                                text: "Date range"
+                                color: app.muted_text_color
+                                font_size: 12
+                                bold: True
+                                size_hint_y: None
+                                height: 16
+                                halign: "left"
+                                valign: "middle"
+                                text_size: self.size
+                            BoxLayout:
+                                spacing: 8
+                                StyledInput:
+                                    id: start_date
+                                    hint_text: "MM/DD/YY"
+                                Label:
+                                    text: "to"
+                                    color: app.muted_text_color
+                                    size_hint_x: None
+                                    width: 22
+                                    halign: "center"
+                                    valign: "middle"
+                                StyledInput:
+                                    id: end_date
+                                    hint_text: "MM/DD/YY"
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: 44
+                        spacing: 10
+                        PrimaryButton:
+                            text: "Generate report"
+                            size_hint_x: None
+                            width: 180
+                            on_release: root.generate_report()
+                        NeutralButton:
+                            text: "Export PDF"
+                            size_hint_x: None
+                            width: 130
+                            on_release: root.export_pdf()
+                        NeutralButton:
+                            text: "Export CSV"
+                            size_hint_x: None
+                            width: 130
+                            on_release: root.export_csv()
+                        Widget:
+
+                Card:
+                    padding: 0
+                    spacing: 0
+                    BoxLayout:
+                        id: results_table
+                        orientation: "vertical"
+                        spacing: 0

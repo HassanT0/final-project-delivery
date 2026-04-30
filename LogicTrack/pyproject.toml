@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "logictrack"
+version = "1.0.0"
+description = "Modern Enterprise inventory management — Kivy desktop app with branded PDF reports."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Morgan Grant" },
+    { name = "Madison Lindsey" },
+    { name = "Raymond Rai" },
+    { name = "Aashish Amgain" },
+    { name = "Hassan Issaka" },
+]
+keywords = ["inventory", "kivy", "desktop", "sqlite", "reportlab"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: X11 Applications",
+    "Environment :: MacOS X",
+    "Environment :: Win32 (MS Windows)",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
+]
+
+dependencies = [
+    "kivy>=2.2.0",
+    "reportlab>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pyflakes>=3.1",
+    "ruff>=0.4",
+    "mypy>=1.7",
+]
+
+[project.scripts]
+logictrack = "main:LogicTrackApp.run"
+logictrack-setup = "scripts.setup_environment:main"
+
+[project.urls]
+Homepage      = "https://github.com/example/logictrack"
+Documentation = "https://github.com/example/logictrack#readme"
+Issues        = "https://github.com/example/logictrack/issues"
+
+[tool.setuptools]
+py-modules = ["main", "database", "models", "style_manager"]
+
+[tool.setuptools.packages.find]
+include = ["screens*", "scripts*"]
+
+[tool.setuptools.package-data]
+"*" = ["kv/*.kv", "assets/**/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+warn_redundant_casts = true
+strict_optional = true
+ignore_missing_imports = true

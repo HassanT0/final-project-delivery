@@ -1,0 +1,248 @@
+#:kivy 2.0.0
+#:import Window kivy.core.window.Window
+
+# ============================================================================
+# Modern Enterprise design system — shared widget rules.
+# Loaded first by main.py so screen-specific .kv files can reference these.
+# ============================================================================
+
+
+# ---------- inputs ----------------------------------------------------------
+<StyledInput@TextInput>:
+    multiline: False
+    background_normal: ""
+    background_active: ""
+    background_color: app.input_bg
+    foreground_color: app.text_color
+    cursor_color: app.primary
+    hint_text_color: app.muted_text_color
+    font_size: 14
+    padding: [16, 14]
+    size_hint_y: None
+    height: 44
+    write_tab: False
+
+
+# ---------- buttons ---------------------------------------------------------
+<_BaseRoundedButton@Button>:
+    background_normal: ""
+    background_color: 0, 0, 0, 0
+    color: 1, 1, 1, 1
+    font_size: 14
+    bold: True
+    size_hint_y: None
+    height: 42
+    btn_color: app.primary
+    canvas.before:
+        Color:
+            rgba: (max((self.btn_color or app.primary)[0]-0.05,0), max((self.btn_color or app.primary)[1]-0.05,0), max((self.btn_color or app.primary)[2]-0.05,0), (self.btn_color or app.primary)[3]) if self.state == "down" else (self.btn_color or app.primary)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8,]
+
+<PrimaryButton@_BaseRoundedButton>:
+    btn_color: app.primary
+
+<SuccessButton@_BaseRoundedButton>:
+    btn_color: app.success
+
+<DangerButton@_BaseRoundedButton>:
+    btn_color: app.danger
+
+<InfoButton@_BaseRoundedButton>:
+    btn_color: app.info
+
+<NeutralButton@_BaseRoundedButton>:
+    btn_color: app.neutral_btn
+    color: app.text_color
+
+
+# ---------- card surface (subtle elevation, no harsh shadows) --------------
+<Card@BoxLayout>:
+    orientation: "vertical"
+    padding: 20
+    spacing: 12
+    canvas.before:
+        Color:
+            rgba: app.card_bg
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [12,]
+        Color:
+            rgba: app.card_border
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 12)
+            width: 1
+
+
+# ---------- sidebar nav button (Material icon glyph + label) ---------------
+# Uses Kivy markup so the leading glyph can render in the icon font while
+# the label renders in the default font. When the icon font isn't
+# registered (no .ttf in assets/fonts), we fall back to a short ASCII
+# glyph like "[]" so the menu still reads cleanly.
+<NavButton@Button>:
+    active: False
+    icon_glyph: ""
+    icon_fallback: ""
+    label_text: ""
+    # Only enable markup when the icon font is registered — otherwise the
+    # ASCII fallback (e.g. "[#] Inventory") would be parsed as markup.
+    markup: app.icon_font != "Roboto"
+    background_normal: ""
+    background_color: 0, 0, 0, 0
+    halign: "left"
+    valign: "middle"
+    text_size: self.width - 44, None
+    padding: [22, 0, 14, 0]
+    color: app.sidebar_active_text if self.active else app.sidebar_text
+    font_size: 14
+    bold: self.active
+    text:
+        ("[font=" + app.icon_font + "][size=18]" + self.icon_glyph + "[/size][/font]    " + self.label_text) \
+        if app.icon_font != "Roboto" \
+        else (self.icon_fallback + "  " + self.label_text)
+    size_hint_y: None
+    height: 44
+    canvas.before:
+        Color:
+            rgba: app.sidebar_active if self.active else (app.sidebar_hover if self.state == "down" else (1, 1, 1, 0))
+        RoundedRectangle:
+            pos: (self.x + 12, self.y + 3)
+            size: (self.width - 24, self.height - 6)
+            radius: [8,]
+
+
+# ---------- sidebar shell ---------------------------------------------------
+<Sidebar@BoxLayout>:
+    orientation: "vertical"
+    size_hint_x: None
+    width: 232
+    padding: 0, 18, 0, 18
+    spacing: 4
+    canvas.before:
+        Color:
+            rgba: app.sidebar_bg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        # subtle right edge — replaces a heavy divider with a 1px hairline
+        Color:
+            rgba: 1, 1, 1, 0.04
+        Rectangle:
+            pos: self.right - 1, self.y
+            size: 1, self.height
+
+
+# ---------- topbar ----------------------------------------------------------
+<TopBar@BoxLayout>:
+    title: ""
+    subtitle: ""
+    size_hint_y: None
+    height: 76
+    padding: 28, 14
+    spacing: 12
+    canvas.before:
+        Color:
+            rgba: app.card_bg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: app.divider
+        Rectangle:
+            pos: self.x, self.y
+            size: self.width, 1
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 2
+        Label:
+            text: root.title
+            color: app.text_color
+            font_size: 21
+            bold: True
+            halign: "left"
+            valign: "bottom"
+            text_size: self.size
+        Label:
+            text: root.subtitle
+            color: app.muted_text_color
+            font_size: 13
+            halign: "left"
+            valign: "top"
+            text_size: self.size
+
+
+# ---------- KPI tile (used on dashboard) -----------------------------------
+<KpiTile@BoxLayout>:
+    title: ""
+    value: ""
+    value_color: app.text_color
+    icon: ""
+    orientation: "vertical"
+    padding: 20
+    spacing: 8
+    canvas.before:
+        Color:
+            rgba: app.card_bg
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [12,]
+        Color:
+            rgba: app.card_border
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 12)
+            width: 1
+    Label:
+        text: root.title
+        color: app.muted_text_color
+        font_size: 12
+        bold: True
+        size_hint_y: None
+        height: 18
+        halign: "left"
+        valign: "middle"
+        text_size: self.size
+    Label:
+        text: root.value
+        color: root.value_color
+        font_size: 28
+        bold: True
+        halign: "left"
+        valign: "middle"
+        text_size: self.size
+
+
+# ---------- toast (transient inline notice) --------------------------------
+# Use via screens.add_item / screens.login — they pass the danger token to
+# tint the strip when validation fails.
+<Toast@BoxLayout>:
+    message: ""
+    tone: app.danger      # color tuple, e.g. app.danger / app.success
+    visible: False
+    size_hint_y: None
+    height: 40 if self.visible else 0
+    opacity: 1 if self.visible else 0
+    padding: 12, 0
+    canvas.before:
+        Color:
+            rgba: (self.tone[0], self.tone[1], self.tone[2], 0.12) if self.visible else (0, 0, 0, 0)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8,]
+        Color:
+            rgba: self.tone if self.visible else (0, 0, 0, 0)
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 8)
+            width: 1
+    Label:
+        text: root.message
+        color: root.tone
+        font_size: 13
+        bold: True
+        halign: "left"
+        valign: "middle"
+        text_size: self.size

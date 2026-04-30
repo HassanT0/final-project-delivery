@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Kivy / build artifacts
+.buildozer/
+bin/
+
+# SQLite runtime data — recreated on first launch
+logictrack.db
+*.db-journal
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Backup files
+*.bak
